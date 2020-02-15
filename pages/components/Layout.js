@@ -50,6 +50,10 @@ function Layout({
         {darkMode ? <Sun /> : <Moon />}
       </div>
 
+      <div className="logo">
+        ⧩
+      </div>
+
       <Grid>
         <Row>
           <Col md={8}>
