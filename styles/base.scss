@@ -70,3 +70,11 @@ footer {
     box-shadow: inset 0 -10px 0 #55ffb4;
   }
 }
+
+.theme {
+  &--dark {
+    .logo {
+      color: #fff;
+    }
+  }
+}
