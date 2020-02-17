@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-flexbox-grid'
 import Confetti from 'react-confetti'
+import { TwitterTweetEmbed } from 'react-twitter-embed'
 
 import '../styles/base.scss'
 import '../styles/homepage.scss'
@@ -11,10 +12,13 @@ const getRnd = (a, n) => a.sort(() => (Math.random() > 0.5 ? 1 : -1)).slice(0, n
 
 function Homepage({ configData }) {
   // 1229381293017792512
-  const [tweet, setTweet] = useState()
+  const [tweet, setTweet] = useState('1229381293017792512')
   const [many, setMany] = useState()
   const [winners, setWinners] = useState()
   const [loading, setLoading] = useState(false)
+  const [confirm, setConfirm] = useState(true)
+  const [darkMode, setDarkMode] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const handleTweet = e => setTweet(e.target.value)
   const handleWinners = e => setMany(e.target.value)
   const getUsers = data => data.map(({ user }) => user)
@@ -22,6 +26,7 @@ function Homepage({ configData }) {
     setTweet()
     setMany()
     setWinners()
+    setConfirm(false)
   }
 
   const fetchRetweets = async () => {
@@ -38,9 +43,12 @@ function Homepage({ configData }) {
       })
   }
 
-  // useEffect(() => {
-  //   fetchRetweets()
-  // }, [])
+  useEffect(() => {
+    setDarkMode(localStorage.getItem('DARK_MODE') === 'true')
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <div />
 
   return (
     <>
@@ -56,6 +64,34 @@ function Homepage({ configData }) {
       <Layout configData={configData}>
         <Row>
           <Col md={6} mdOffset={3}>
+            {!loading && !winners && tweet && confirm && (
+              <div style={{ textAlign: 'center' }}>
+                <br />
+
+                <TwitterTweetEmbed
+                  tweetId={tweet}
+                  placeholder="Loading Tweet ..."
+                  options={{
+                    theme: darkMode ? 'dark' : ''
+                  }}
+                />
+
+                <Row>
+                  <Col lg={6}>
+                    <button className="cancel-button" onClick={() => redrawWinners(false)}>
+                      No, get me back
+                    </button>
+                  </Col>
+
+                  <Col lg={6}>
+                    <button className="submit-button" onClick={() => fetchRetweets()}>
+                      This is the Tweet 👍
+                    </button>
+                  </Col>
+                </Row>
+              </div>
+            )}
+
             {!loading && winners && (
               <>
                 <Row center="md">
@@ -82,7 +118,7 @@ function Homepage({ configData }) {
               </>
             )}
 
-            {!loading && !winners && (
+            {!loading && !winners && !confirm && (
               <>
                 <br />
                 <br />
@@ -102,11 +138,11 @@ function Homepage({ configData }) {
                 />
 
                 <button
-                  onClick={() => fetchRetweets()}
+                  onClick={() => setConfirm(true)}
                   className="submit-button"
                   disabled={!tweet || !many}
                 >
-                  Randomize winners
+                  Preview Tweet
                 </button>
               </>
             )}

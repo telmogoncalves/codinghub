@@ -120,6 +120,24 @@
   }
 }
 
+.cancel-button {
+  background: #ddd;
+  font-family: 'source-code-pro', monospace;
+  font-size: 20px;
+  width: 100%;
+  display: block;
+  border: 0;
+  padding: 10px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+  margin-bottom: 20px;
+
+  &:hover {
+    background: darken(#ddd, 20%);
+  }
+}
+
 .loading {
   text-align: center;
   margin: 100px 0 0;
@@ -139,4 +157,8 @@
   .username {
     margin-top: 10px;
   }
+}
+
+.twitter-tweet {
+  margin: 0 auto 30px !important;
 }
