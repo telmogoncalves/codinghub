@@ -1,1 +1,0 @@
-export const ANALYTICS_ID = 'UA-156802809-1'

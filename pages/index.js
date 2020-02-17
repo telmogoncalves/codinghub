@@ -1,59 +1,130 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-flexbox-grid'
-import Router from 'next/router'
-import withGA from 'next-ga'
+import Confetti from 'react-confetti'
 
 import '../styles/base.scss'
 import '../styles/homepage.scss'
-import { ANALYTICS_ID } from '../constants/GoogleConstants'
 
 import Layout from './components/Layout'
-import Course from './components/Course'
-import Tags from './components/Tags'
 
-const shuffleArray = arr => arr
-  .map(a => [Math.random(), a])
-  .sort((a, b) => a[0] - b[0])
-  .map(a => a[1]);
+const getRnd = (a, n) => a.sort(() => (Math.random() > 0.5 ? 1 : -1)).slice(0, n)
 
-function Homepage({ configData, resourcesData }) {
-  const [filterTag, setFilterTag] = useState()
+function Homepage({ configData }) {
+  // 1229381293017792512
+  const [tweet, setTweet] = useState()
+  const [many, setMany] = useState()
+  const [winners, setWinners] = useState()
+  const [loading, setLoading] = useState(false)
+  const handleTweet = e => setTweet(e.target.value)
+  const handleWinners = e => setMany(e.target.value)
+  const getUsers = data => data.map(({ user }) => user)
+  const redrawWinners = () => {
+    setTweet()
+    setMany()
+    setWinners()
+  }
 
-  const data = filterTag ? resourcesData.filter(
-    course =>
-      course.tags.includes(filterTag)
-  ) : resourcesData
+  const fetchRetweets = async () => {
+    setLoading(true)
+
+    fetch(`https://repickr-api.now.sh/${tweet}`)
+      .then(res => res.json())
+      .then(result => {
+        const users = getUsers(result)
+        const winners = getRnd(users, many)
+
+        setWinners(winners)
+        setLoading(false)
+      })
+  }
+
+  // useEffect(() => {
+  //   fetchRetweets()
+  // }, [])
 
   return (
-    <Layout configData={configData}>
-      {resourcesData && (
-        <>
-          <Row>
-            <Col md={12}>
-              <Tags data={resourcesData} filterTag={filterTag} setTag={setFilterTag} />
-            </Col>
-          </Row>
-
-          <div className="resources-list">
-            <Row>
-              {data.map(data => (
-                <Col md={6} key={data.title} style={{ marginBottom: 20 }}>
-                  <Course data={data} />
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </>
+    <>
+      {winners && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          opacity={.4}
+          recycle={false}
+        />
       )}
-    </Layout>
+
+      <Layout configData={configData}>
+        <Row>
+          <Col md={6} mdOffset={3}>
+            {!loading && winners && (
+              <>
+                <Row center="md">
+                  {winners.map(({ id, profile_image_url, screen_name }) => (
+                    <Col md={6} key={id}>
+                      <div className="winner-container">
+                        <img src={profile_image_url} />
+
+                        <div className="username">
+                          @{screen_name}
+                        </div>
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+
+                <Row>
+                  <Col md={6} mdOffset={3}>
+                    <button className="submit-button" onClick={() => redrawWinners()}>
+                      Redraw
+                    </button>
+                  </Col>
+                </Row>
+              </>
+            )}
+
+            {!loading && !winners && (
+              <>
+                <br />
+                <br />
+
+                <input
+                  className="input"
+                  type="text"
+                  onChange={handleTweet}
+                  placeholder="ID of the Tweet"
+                />
+
+                <input
+                  className="input"
+                  type="number"
+                  onChange={handleWinners}
+                  placeholder="Number of winners"
+                />
+
+                <button
+                  onClick={() => fetchRetweets()}
+                  className="submit-button"
+                  disabled={!tweet || !many}
+                >
+                  Randomize winners
+                </button>
+              </>
+            )}
+
+            {loading && (
+              <div className="loading">Fetching data, please wait ...</div>
+            )}
+          </Col>
+        </Row>
+      </Layout>
+    </>
   )
 }
 
 Homepage.getInitialProps = async function() {
   const configData = await import(`./data/config.json`)
-  const resourcesData = await import(`../content/courses.js`)
 
-  return { configData, resourcesData: shuffleArray(resourcesData.default) }
+  return { configData }
 }
 
-export default withGA(ANALYTICS_ID, Router)(Homepage)
+export default Homepage

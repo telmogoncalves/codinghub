@@ -38,7 +38,7 @@ function Layout({
         <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
         <meta name='apple-mobile-web-app-capable' content='yes' />
 
-        <title>{title} ∙ Curated list of awesome tech videos</title>
+        <title>{title} ∙ randomize retweets</title>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@telmo" />
         <meta name="twitter:title" content={title} />
@@ -50,16 +50,12 @@ function Layout({
         {darkMode ? <Sun /> : <Moon />}
       </div>
 
-      <div className="logo">
-        ⧩
-      </div>
-
       <Grid>
         <Row>
-          <Col md={8}>
+          <Col md={12}>
             <div className="homepage">
               <div className="homepage__title">
-                <div dangerouslySetInnerHTML={{ __html: `{coding<span>hub</span>}` }} />
+                re<span>pickr</span>
               </div>
 
               <div className="homepage__description">
@@ -82,7 +78,6 @@ function Layout({
         <br />
 
         Hosted on <a href="http://zeit.co/" target="_blank">Zeit</a>.
-        Check the <a href="http://github.com/telmogoncalves/codinghub" target="_blank">source code</a>.
       </footer>
     </div>
   )

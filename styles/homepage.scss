@@ -1,5 +1,6 @@
 .homepage {
   margin-top: 80px;
+  text-align: center;
 
   &__title {
     letter-spacing: -5px;
@@ -29,138 +30,6 @@
   }
 }
 
-.available-tags {
-  padding-bottom: 10px;
-  margin: 80px 5px 0;
-
-  @media only screen and (max-width: 600px) {
-    margin: 80px 0 0;
-  }
-
-  &__tag {
-    display: inline-block;
-    margin-right: 10px;
-    font-size: 13px;
-    border: 1px #ddd solid;
-    padding: 3px 10px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-
-    svg {
-      vertical-align: top;
-      margin: 4px 5px 0 0;
-    }
-
-    &:hover {
-      border-color: #55ffb4;
-      cursor: pointer;
-      cursor: hand;
-    }
-
-    &.active {
-      border-color: #55ffb4;
-      background: #55ffb4;
-    }
-  }
-}
-
-.resources-list {
-  margin-top: 30px;
-  display: flex;
-
-  &__item {
-    border: 1px darken(#55ffb4, 25%) solid;
-    box-shadow: 0 0 0 4px rgba(85, 255, 180, .15);
-    border-radius: 6px;
-    padding: 40px 40px 80px;
-    height: 100%;
-    box-sizing: border-box;
-    position: relative;
-    margin: 0 5px;
-    width: 100%;
-
-    @media only screen and (max-width: 600px) {
-      padding: 40px 20px 80px;
-      margin: 0;
-    }
-
-    &--title {
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: -.5px;
-      color: #222;
-      transition: all .2s linear;
-
-      @media only screen and (max-width: 600px) {
-        font-size: 20px;
-      }
-    }
-
-    &--new {
-      display: inline-block;
-      background: #55ffb4;
-      font-size: 15px;
-      padding: 3px 8px;
-      font-weight: bold;
-      position: absolute;
-      top: 42px;
-      left: -15px;
-      border-radius: 4px;
-
-      @media only screen and (max-width: 600px) {
-        left: -22px;
-        top: 42px;
-        font-size: 13px;
-        padding: 2px 6px;
-      }
-    }
-
-    &--info {
-      font-size: 14px;
-      margin-top: 10px;
-      color: #222;
-
-      img {
-        vertical-align: middle;
-        width: 26px;
-        height: 26px;
-        border-radius: 250px;
-        padding: 2px;
-        border: 2px darken(#55ffb4, 25%) solid;
-        margin-right: 10px;
-      }
-
-      svg {
-        vertical-align: top;
-        margin: 2px 5px 0;
-        background: #55ffb4;
-      }
-
-      a {
-        color: #222;
-        text-decoration: none;
-        transition: all .2s linear;
-
-        &:hover {
-          box-shadow: inset 0 -10px 0 #55ffb4;
-        }
-      }
-    }
-
-    &--description {
-      color: #444;
-      margin-top: 20px;
-      font-size: 15px;
-      letter-spacing: -.5px;
-      line-height: 1.7em;
-
-      @media only screen and (max-width: 600px) {
-        font-size: 13px;
-      }
-    }
-  }
-}
-
 /* ********************************** */
 /* ********** DARK MODE ************* */
 /* ********************************** */
@@ -183,56 +52,91 @@
       }
     }
 
-    .available-tags {
-      &__tag {
-        border: 1px #333 solid;
+    .input {
+      border-color: #333;
+      background: #000;
+      color: #fff;
+    }
+
+    .submit-button {
+      background: #D81159;
+      color: #fff;
+
+      &:hover {
+        background: darken(#D81159, 10%);
+      }
+
+      &[disabled] {
+        background: #333;
+      }
+    }
+
+    .loading {
+      color: #fff;
+    }
+
+    .winner-container {
+      img {
+        border-color: #D81159;
+      }
+
+      .username {
         color: #fff;
-
-        &:hover {
-          border-color: $main;
-        }
-
-        &.active {
-          border-color: $main;
-          background: $main;
-        }
       }
     }
+  }
+}
 
-    .resources-list {
-      &__item {
-        border: 1px $main solid;
-        box-shadow: 0 0 0 4px rgba(216, 18, 90, .15);
+.input {
+  width: 100%;
+  border: 1px #ccc solid;
+  font-family: 'source-code-pro', monospace;
+  font-size: 18px;
+  padding: 10px 15px;
+  border-radius: 3px;
+  margin: 0 0 20px;
+  box-sizing: border-box;
+}
 
-        &--title {
-          color: #fff;
-        }
+.submit-button {
+  background: #55ffb4;
+  font-family: 'source-code-pro', monospace;
+  font-size: 20px;
+  width: 100%;
+  display: block;
+  border: 0;
+  padding: 10px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
 
-        &--new {
-          color: #fff;
-          background: $main;
-        }
+  &:hover {
+    background: darken(#55ffb4, 20%);
+  }
 
-        &--info {
-          color: #999;
+  &[disabled] {
+    pointer-events: none;
+    background: #eee;
+  }
+}
 
-          img {
-            border: 2px $main solid;
-          }
+.loading {
+  text-align: center;
+  margin: 100px 0 0;
+  font-size: 21px;
+}
 
-          a {
-            color: #ccc;
+.winner-container {
+  text-align: center;
+  margin: 60px 0;
 
-            &:hover {
-              box-shadow: inset 0 -10px 0 $main;
-            }
-          }
-        }
+  img {
+    border-radius: 250px;
+    padding: 2px;
+    border: 3px #55ffb4 solid;
+  }
 
-        &--description {
-          color: #ddd;
-        }
-      }
-    }
+  .username {
+    margin-top: 10px;
   }
 }
