@@ -12,11 +12,11 @@ const getRnd = (a, n) => a.sort(() => (Math.random() > 0.5 ? 1 : -1)).slice(0, n
 
 function Homepage({ configData }) {
   // 1229381293017792512
-  const [tweet, setTweet] = useState('1229381293017792512')
+  const [tweet, setTweet] = useState()
   const [many, setMany] = useState()
   const [winners, setWinners] = useState()
   const [loading, setLoading] = useState(false)
-  const [confirm, setConfirm] = useState(true)
+  const [confirm, setConfirm] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
   const [mounted, setMounted] = useState(false)
   const handleTweet = e => setTweet(e.target.value)
@@ -70,7 +70,11 @@ function Homepage({ configData }) {
 
                 <TwitterTweetEmbed
                   tweetId={tweet}
-                  placeholder="Loading Tweet ..."
+                  placeholder={(
+                    <div style={{ margin: '35px 0' }}>
+                      Loading Tweet ...
+                    </div>
+                  )}
                   options={{
                     theme: darkMode ? 'dark' : ''
                   }}
