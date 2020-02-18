@@ -11,16 +11,16 @@ import TweetPreview from './components/TweetPreview'
 import Winners from './components/Winners'
 
 const getRnd = (a, n) => a.sort(() => (Math.random() > 0.5 ? 1 : -1)).slice(0, n)
-// const API_ENDPOINT = `https://repickr-api.now.sh`
-const API_ENDPOINT = `http://localhost:8000`
+const API_ENDPOINT = `https://repickr-api.now.sh`
+// const API_ENDPOINT = `http://localhost:8000`
 
 function Homepage({ configData }) {
-  const [currentStep, setCurrentStep] = useState(2)
-  const [tweet, setTweet] = useState('1229381293017792512')
-  const [many, setMany] = useState(1)
-  // const [currentStep, setCurrentStep] = useState(1)
-  // const [tweet, setTweet] = useState()
-  // const [many, setMany] = useState()
+  // const [currentStep, setCurrentStep] = useState(2)
+  // const [tweet, setTweet] = useState('1229381293017792512')
+  // const [many, setMany] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [tweet, setTweet] = useState()
+  const [many, setMany] = useState()
   const [winners, setWinners] = useState()
   const [loading, setLoading] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
