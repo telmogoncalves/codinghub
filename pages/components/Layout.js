@@ -71,6 +71,15 @@ function Layout({
       </Grid>
 
       <footer>
+        <Row>
+          <Col md={12}>
+            <div style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>
+              Only works with Tweets that have up to 100 Retweets, sadly <br />
+              that's what the Twitter API provides.
+            </div>
+          </Col>
+        </Row>
+
         Made by <a href="https://twitter.com/telmo" target="_blank">Telmo Goncalves</a> with {' '}
         <a href="https://nextjs.org/" target="_blank">NextJS</a> {' '}
         &copy; {new Date().getFullYear()}

@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-flexbox-grid'
 import Confetti from 'react-confetti'
-import { TwitterTweetEmbed } from 'react-twitter-embed'
 
 import '../styles/base.scss'
 import '../styles/homepage.scss'
 
 import Layout from './components/Layout'
+import Form from './components/Form'
+import TweetPreview from './components/TweetPreview'
+import Winners from './components/Winners'
 
 const getRnd = (a, n) => a.sort(() => (Math.random() > 0.5 ? 1 : -1)).slice(0, n)
+// const API_ENDPOINT = `https://repickr-api.now.sh`
+const API_ENDPOINT = `http://localhost:8000`
 
 function Homepage({ configData }) {
-  // 1229381293017792512
-  const [tweet, setTweet] = useState()
-  const [many, setMany] = useState()
+  const [currentStep, setCurrentStep] = useState(2)
+  const [tweet, setTweet] = useState('1229381293017792512')
+  const [many, setMany] = useState(1)
+  // const [currentStep, setCurrentStep] = useState(1)
+  // const [tweet, setTweet] = useState()
+  // const [many, setMany] = useState()
   const [winners, setWinners] = useState()
   const [loading, setLoading] = useState(false)
-  const [confirm, setConfirm] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [totalRetweets, setTotalRetweets] = useState()
   const handleTweet = e => setTweet(e.target.value)
-  const handleWinners = e => setMany(e.target.value)
-  const getUsers = data => data.map(({ user }) => user)
+  const handleMany = e => setMany(e.target.value)
   const redrawWinners = () => {
-    setTweet()
-    setMany()
-    setWinners()
-    setConfirm(false)
+    fetchRetweets()
   }
 
   const fetchRetweets = async () => {
     setLoading(true)
 
-    fetch(`https://repickr-api.now.sh/${tweet}`)
+    fetch(`${API_ENDPOINT}/${tweet}`)
       .then(res => res.json())
       .then(result => {
-        const users = getUsers(result)
-        const winners = getRnd(users, many)
+        setTotalRetweets(result.length)
+        const winners = getRnd(result, many)
 
         setWinners(winners)
+        setCurrentStep(3)
         setLoading(false)
       })
   }
@@ -52,7 +56,7 @@ function Homepage({ configData }) {
 
   return (
     <>
-      {winners && (
+      {currentStep === 3 && (
         <Confetti
           width={window.innerWidth}
           height={window.innerHeight}
@@ -64,91 +68,31 @@ function Homepage({ configData }) {
       <Layout configData={configData}>
         <Row>
           <Col md={6} mdOffset={3}>
-            {!loading && !winners && tweet && confirm && (
-              <div style={{ textAlign: 'center' }}>
-                <br />
-
-                <TwitterTweetEmbed
-                  tweetId={tweet}
-                  placeholder={(
-                    <div style={{ margin: '35px 0' }}>
-                      Loading Tweet ...
-                    </div>
-                  )}
-                  options={{
-                    theme: darkMode ? 'dark' : ''
-                  }}
-                />
-
-                <Row>
-                  <Col lg={6}>
-                    <button className="cancel-button" onClick={() => redrawWinners(false)}>
-                      No, get me back
-                    </button>
-                  </Col>
-
-                  <Col lg={6}>
-                    <button className="submit-button" onClick={() => fetchRetweets()}>
-                      This is the Tweet 👍
-                    </button>
-                  </Col>
-                </Row>
-              </div>
+            {!loading && currentStep === 1 && (
+              <Form
+                setCurrentStep={setCurrentStep}
+                handleTweet={handleTweet}
+                handleMany={handleMany}
+                tweet={tweet}
+                many={many}
+              />
             )}
 
-            {!loading && winners && (
-              <>
-                <Row center="md">
-                  {winners.map(({ id, profile_image_url, screen_name }) => (
-                    <Col md={6} key={id}>
-                      <div className="winner-container">
-                        <img src={profile_image_url} />
-
-                        <div className="username">
-                          @{screen_name}
-                        </div>
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-
-                <Row>
-                  <Col md={6} mdOffset={3}>
-                    <button className="submit-button" onClick={() => redrawWinners()}>
-                      Redraw
-                    </button>
-                  </Col>
-                </Row>
-              </>
+            {!loading && currentStep === 2 && (
+              <TweetPreview
+                tweet={tweet}
+                setCurrentStep={setCurrentStep}
+                fetchRetweets={fetchRetweets}
+                darkMode={darkMode}
+              />
             )}
 
-            {!loading && !winners && !confirm && (
-              <>
-                <br />
-                <br />
-
-                <input
-                  className="input"
-                  type="text"
-                  onChange={handleTweet}
-                  placeholder="ID of the Tweet"
-                />
-
-                <input
-                  className="input"
-                  type="number"
-                  onChange={handleWinners}
-                  placeholder="Number of winners"
-                />
-
-                <button
-                  onClick={() => setConfirm(true)}
-                  className="submit-button"
-                  disabled={!tweet || !many}
-                >
-                  Preview Tweet
-                </button>
-              </>
+            {!loading && currentStep === 3 && (
+              <Winners
+                totalRetweets={totalRetweets}
+                winners={winners}
+                redrawWinners={redrawWinners}
+              />
             )}
 
             {loading && (
