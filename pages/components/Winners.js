@@ -5,7 +5,7 @@ function Winners({ winners, totalRetweets, redrawWinners }) {
   return (
     <>
       <Row center="md">
-        {winners.map(({ id, avatar, username }) => (
+        {winners?.map(({ id, avatar, username }) => (
           <Col md={6} key={id}>
             <div className="winner-container">
               <img src={avatar} />
